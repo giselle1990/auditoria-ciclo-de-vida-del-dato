@@ -4,9 +4,9 @@ Autora: Dra. Giselle San German
 Versión: 1.0
 Fecha: 02/11/2026
 
-============================================================
+
 1. FINALIDAD DEL DOCUMENTO
-============================================================
+
 
 Este archivo reúne, en un único lugar, el marco conceptual, las fuentes utilizadas,
 las siete etapas del ciclo de vida del dato, los riesgos actualmente asociados a
@@ -38,9 +38,9 @@ Este documento debe actualizarse cada vez que se modifique:
 - una variable del prototipo,
 - o una fuente conceptual relevante.
 
-============================================================
+
 2. IDEA CENTRAL DEL TRABAJO
-============================================================
+
 
 La calidad de una política pública basada en evidencia depende de la calidad de los
 datos que la sustentan.
@@ -61,9 +61,9 @@ Producto complementario:
 Principio rector:
 - La tecnología asiste al auditor, pero no sustituye su juicio profesional.
 
-============================================================
+
 3. DEFINICIONES CONCEPTUALES UTILIZADAS
-============================================================
+
 
 DATO
 Registro primario de un hecho, numérico, textual o categórico, que todavía no ha
@@ -94,9 +94,9 @@ IMPORTANTE:
 Estas definiciones integran el marco conceptual del trabajo. No deben confundirse con
 los criterios operativos específicos de cada etapa de la matriz.
 
-============================================================
+
 4. LAS SIETE ETAPAS DEL CICLO DE VIDA DEL DATO
-============================================================
+
 
 La estructura de siete etapas es el eje metodológico de la propuesta:
 
@@ -111,9 +111,9 @@ La estructura de siete etapas es el eje metodológico de la propuesta:
 La matriz recorre estas etapas de forma secuencial, aunque en la práctica pueden
 existir retrocesos, iteraciones y superposiciones.
 
-============================================================
+
 5. ETAPA 1 — OBTENCIÓN DEL DATO
-============================================================
+
 
 CONCEPTO
 Comprende los procedimientos mediante los cuales el Estado recoge información de la
@@ -156,9 +156,9 @@ Los riesgos concretos, el porcentaje a partir del cual se considera "subregistro
 los umbrales de incompletitud y la definición de cobertura suficiente son criterios
 que pueden variar según la política auditada.
 
-============================================================
+
 6. ETAPA 2 — REGISTRO Y CARGA
-============================================================
+
 
 CONCEPTO
 Comprende el ingreso del dato en planillas, sistemas informáticos, bases o expedientes.
@@ -201,9 +201,9 @@ CRITERIOS PROPIOS / EDITABLES
 - Reglas de formato.
 - Peso asignado a la existencia o ausencia de controles automáticos.
 
-============================================================
+
 7. ETAPA 3 — VALIDACIÓN
-============================================================
+
 
 CONCEPTO
 Comprende los controles de consistencia, detección de duplicados, cruces con otras
@@ -243,9 +243,9 @@ CRITERIOS PROPIOS / EDITABLES
 - Qué fuentes externas se consideran válidas.
 - Qué controles son obligatorios según el tipo de política.
 
-============================================================
+
 8. ETAPA 4 — PROCESAMIENTO
-============================================================
+
 
 CONCEPTO
 Incluye limpieza, clasificación, segmentación, transformación, agregación y
@@ -287,9 +287,9 @@ CRITERIOS PROPIOS / EDITABLES
 - Qué inconsistencias categóricas ameritan observación.
 - Qué requisitos de reversibilidad se exigen.
 
-============================================================
+
 9. ETAPA 5 — CONSTRUCCIÓN DE INDICADORES
-============================================================
+
 
 CONCEPTO
 Comprende la transformación de información en métricas utilizadas para evaluar una
@@ -333,9 +333,9 @@ CRITERIOS PROPIOS / EDITABLES
 - Qué se considera indicador proxy.
 - Qué indicadores adicionales exige el auditor.
 
-============================================================
+
 10. ETAPA 6 — USO PARA LA TOMA DE DECISIONES
-============================================================
+
 
 CONCEPTO
 Es el momento en que la información se utiliza para asignar recursos, priorizar
@@ -376,9 +376,9 @@ CRITERIOS PROPIOS / EDITABLES
 - Qué documentos deben existir para justificar una decisión.
 - Qué grado de correspondencia debe existir entre indicadores y asignación de recursos.
 
-============================================================
+
 11. ETAPA 7 — EVALUACIÓN Y RETROALIMENTACIÓN
-============================================================
+
 
 CONCEPTO
 Incluye el análisis de resultados, corrección de desvíos y utilización de lo aprendido
@@ -418,9 +418,9 @@ CRITERIOS PROPIOS / EDITABLES
 - Qué nivel de implementación de una recomendación se considera suficiente.
 - Qué indicadores permiten demostrar retroalimentación efectiva.
 
-============================================================
+
 12. ESTRUCTURA ACTUAL DE LA MATRIZ
-============================================================
+
 
 COLUMNAS PREDEFINIDAS
 - Etapa del ciclo de vida del dato.
@@ -440,9 +440,9 @@ NOTA METODOLÓGICA
 La matriz no es una lista cerrada. Puede adaptarse a cada política, organismo o
 contexto institucional.
 
-============================================================
+
 13. PROTOTIPO DIGITAL — CRITERIOS ACTUALES
-============================================================
+
 
 El prototipo incorpora dos líneas de trabajo:
 
@@ -471,9 +471,9 @@ El Random Forest no fue entrenado con auditorías reales.
 Su desempeño no debe presentarse como evidencia de validez externa.
 Es una prueba de concepto.
 
-============================================================
+
 14. REGLAS Y PONDERACIONES EXPERIMENTALES
-============================================================
+
 
 Las ponderaciones actuales son criterios de diseño y pueden modificarse.
 
@@ -492,9 +492,9 @@ RECOMENDACIÓN:
 Mantener estas ponderaciones en un archivo separado (por ejemplo:
 criterios_riesgo.json) para poder modificarlas sin cambiar la estructura de la app.
 
-============================================================
+
 15. CRITERIOS DEL ANÁLISIS AUTOMÁTICO DE BASES
-============================================================
+
 
 Controles actualmente considerados:
 - Duplicados completos.
@@ -519,9 +519,9 @@ Ejemplos de parámetros que deberían versionarse:
 - identificador principal,
 - reglas de normalización de categorías.
 
-============================================================
+
 16. CLASIFICACIÓN DE ORIGEN DE CADA ELEMENTO
-============================================================
+
 
 [MARCO CONCEPTUAL / FUENTE]
 - Diferencia entre dato, información, indicador y evidencia.
@@ -558,9 +558,9 @@ Ejemplos de parámetros que deberían versionarse:
 - Interfaz digital.
 - Análisis automático de CSV/Excel.
 
-============================================================
+
 17. BIBLIOGRAFÍA Y DOCUMENTACIÓN UTILIZADA
-============================================================
+
 
 Batini, C., & Scannapieco, M. (2016).
 Data and information quality: Dimensions, principles and techniques (2nd ed.).
@@ -636,9 +636,9 @@ Auditorías de desempeño en América Latina: ¿mejorando la confianza en los go
 Gestión y Política Pública, 27(2), 407–438.
 https://doi.org/10.29256/gpp.v27i2.407
 
-============================================================
+
 18. ARCHIVOS DE TRABAJO Y PROTOTIPOS UTILIZADOS
-============================================================
+
 
 - Trabajo final:
   "Hacia una matriz de ayuda al auditor de campo para la auditoría del ciclo de vida
@@ -666,9 +666,9 @@ https://doi.org/10.29256/gpp.v27i2.407
   detección de alertas,
   clasificación orientativa de riesgo.
 
-============================================================
+
 19. REGLA DE USO DEL PROTOTIPO
-============================================================
+
 
 La aplicación:
 - NO declara automáticamente un hallazgo definitivo.
@@ -684,9 +684,9 @@ La aplicación:
 - sugiere preguntas y controles,
 - facilita trazabilidad y documentación.
 
-============================================================
+
 20. CONTROL DE CAMBIOS
-============================================================
+
 
 Usar esta sección cada vez que se modifique un criterio.
 
@@ -716,9 +716,9 @@ CRITERIO NUEVO: umbral configurable según periodicidad del programa
 MOTIVO: no todas las políticas actualizan información con la misma frecuencia
 TIPO DE CAMBIO: criterio propio / parametrización
 
-============================================================
+
 21. PRINCIPIO FINAL
-============================================================
+
 
 Los conceptos generales de calidad, trazabilidad, evidencia y control tienen respaldo
 conceptual y bibliográfico.
