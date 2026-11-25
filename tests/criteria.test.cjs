@@ -5,11 +5,12 @@ const fs = require('node:fs');
 const elements = new Map();
 let exported;
 function element(id) {
- if (!elements.has(id)) elements.set(id, {value:'',innerHTML:'',textContent:'',classList:{add(){},remove(){}},addEventListener(event,fn){this[event]=fn},querySelector(){return element(id+'-body')},offsetTop:0});
+ if (!elements.has(id)) elements.set(id, {value:'',innerHTML:'',textContent:'',classList:{add(){},remove(){},toggle(){}},addEventListener(event,fn){this[event]=fn},querySelector(){return element(id+'-body')},offsetTop:0});
  return elements.get(id);
 }
 const context = vm.createContext({document:{getElementById:element,createElement:()=>({click(){}})},window:{scrollTo(){}},alert(message){throw Error(message)},Blob,URL:{createObjectURL(blob){exported=blob;return 'blob:test'},revokeObjectURL(){}}});
 vm.runInContext(fs.readFileSync('app.js','utf8'),context);
+vm.runInContext(fs.readFileSync('explorer.js','utf8'),context);
 const run=code=>vm.runInContext(code,context);
 test('document-dependent checks remain pending on complete and incomplete data',()=>{
  for(const csv of ['id,fecha\n1,2026-11-25','id,fecha\n,1900-01-01']) {
@@ -61,4 +62,44 @@ test('export preserves methodology warning and descriptive states',async()=>{
  assert.match(csv,/no califican riesgos/);
  assert.match(csv,/Requiere evidencia/);
  assert.doesNotMatch(csv,/,NIVEL,|"Alto"|"Medio"|"Bajo"/);
+});
+
+test('CSV preserves duplicate and empty headers and handles quoted multiline values',()=>{
+ run(`parseCSV('nombre,nombre,\\n"Ana\\nMaría",Pérez,0')`);
+ assert.equal(run('headers.length'),3);
+ assert.equal(run('headers[1]'),'nombre (2)');
+ assert.equal(run('rows[0][headers[1]]'),'Pérez');
+ assert.equal(run('headerNotes.length'),2);
+ assert.throws(()=>run(`parseCSV('a,b\\n1,2,3')`),/distinta cantidad/);
+ assert.throws(()=>run(`parseCSV('a\\n"sin cierre')`),/comillas/);
+});
+test('missing FAQ counts cells and affected records separately, preserves zero',()=>{
+ run("parseCSV('id,nombre,edad\\n1,,0\\n2,,\\n3,Ana,20')");
+ assert.equal(run('generalProfile().emptyCells'),3);
+ assert.equal(run('generalProfile().affected'),2);
+ assert.equal(run("answerQuestion('missing','','','',false).data.length"),3);
+ assert.equal(run("answerQuestion('missing','2','','',false).data.length"),1);
+});
+test('duplicates distinguish rows, values and name variants',()=>{
+ run("parseCSV('id,nombre,apellido\\n1,José,Pérez\\n1,José,Pérez\\n2,JOSE,PEREZ\\n3,,Pérez\\n4,Jose,Otro')");
+ assert.equal(run("answerQuestion('rows','','','',false).data.length"),2);
+ assert.equal(run("answerQuestion('values','2','','',false).data.length"),3);
+ assert.equal(run("answerQuestion('names','','1','2',false).data.length"),2);
+ assert.equal(run("answerQuestion('names','','1','2',true).data.length"),3);
+ assert.throws(()=>run("answerQuestion('values','','','',false)"),/Elegí/);
+ assert.throws(()=>run("answerQuestion('names','','1','1',false)"),/diferentes/);
+});
+test('overview and question handlers render escaped data, export all results and reset',()=>{
+ run("parseCSV('nombre\\n<img src=x>\\n<img src=x>')");
+ run('renderOverview()');
+ assert.match(element('dataPreview').innerHTML,/&lt;img/);
+ element('faqQuestion').value='rows';element('askFaq').click();
+ assert.match(element('faqTable').innerHTML,/&lt;img/);
+ run("headers=['valor'];rows=Array.from({length:60},()=>({valor:'=1+1'}))");
+ element('askFaq').click();
+ assert.match(element('faqLimit').textContent,/50 de 60/);
+ assert.equal(run('faqResult.data.length'),60);
+ assert.match(run('faqCSV(faqResult)'),/For|Exportación/);
+ assert.match(run('faqCSV(faqResult)'),/'=1\+1/);
+ run('resetAnalysis()');assert.equal(run('faqResult'),null);
 });

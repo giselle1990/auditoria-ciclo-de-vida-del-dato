@@ -11,8 +11,8 @@
 ![Etapas](https://img.shields.io/badge/Ciclo-7%20etapas-2f9e44?style=for-the-badge)
 ![Uso](https://img.shields.io/badge/Uso-Auditor%C3%ADa%20de%20campo-6741d9?style=for-the-badge)
 
-**Autora:** Dra. Giselle San German  
-**Versión metodológica:** 2.0 · **Documentación:** noviembre de 2026
+**Autora:** Dra. Giselle San German<br>
+**Versión metodológica:** 3.0 · **Documentación:** noviembre de 2026
 
 </div>
 
@@ -42,15 +42,24 @@ El proyecto combina dos productos:
 
 La aplicación fue diseñada como una herramienta de apoyo para una primera lectura de la base entregada por el organismo auditado.
 
-1. **Carga local del archivo** CSV, XLSX o XLS.
-2. **Selección de una etapa** del ciclo de vida del dato.
-3. **Análisis automático** de aspectos observables en la base.
-4. **Identificación de riesgos** que requieren revisión documental o de campo.
-5. **Descripción del resultado** sin graduar riesgos ni calcular un puntaje de etapa.
-6. **Sugerencia de una acción de auditoría**.
-7. **Descarga del análisis** generado.
+1. **Carga local del archivo** CSV, XLSX o XLS y selección de hoja.
+2. **Evaluación general**: cantidad de registros y columnas, vacíos por campo, valores distintos y grupos de filas idénticas. Vista previa de 10 registros.
+3. **Preguntas frecuentes**: campos vacíos, filas duplicadas, valores repetidos en una columna y nombres repetidos. Respuestas calculadas sobre toda la hoja, sin IA.
+4. **Selección de etapa** para profundizar en pruebas y evidencia adicional.
+5. **Descarga** de consultas o análisis por etapa, sin calificar riesgos.
 
-> 🔐 **Privacidad del análisis:** el archivo se procesa localmente en el navegador. La base no se muestra en pantalla.
+### Preguntas frecuentes y criterios reproducibles
+
+- **Campos vacíos:** valores ausentes o solo espacios. Cero y textos como “N/A” no se consideran vacíos. Se informa cada celda y su registro; no se presupone obligatoriedad.
+- **Filas duplicadas:** igualdad de todas las columnas tras recortar espacios exteriores. Se cuentan grupos, registros involucrados y repeticiones adicionales a la primera. No se elimina ningún registro.
+- **Valores repetidos:** se elige una columna y se comparan valores no vacíos exactamente. Las categorías repetidas pueden ser legítimas; verificar si existe un criterio de unicidad.
+- **Nombres repetidos:** se elige nombre o nombre completo y, opcionalmente, apellido en otra columna. Por defecto la comparación es exacta; la opción de variantes ignora mayúsculas, tildes y espacios repetidos, manteniendo puntuación y orden. Si falta un componente seleccionado, el registro se excluye de esta comparación y se informa el conteo. Coincidencia de nombres no acredita identidad de personas.
+
+Las respuestas muestran hasta 50 resultados, con descarga completa y contexto de archivo, hoja, consulta y fecha. “Registro” es la posición desde 1 en la base cargada, **no la fila física del CSV o Excel**. La descarga protege valores que podrían ejecutarse como fórmulas, agregando un apóstrofo. Cambiar de archivo, hoja o pregunta invalida la respuesta anterior.
+
+Los encabezados vacíos o repetidos reciben nombres únicos y se informa el ajuste, sin sobrescribir columnas. Se omiten filas totalmente vacías. El resumen no constituye un examen exhaustivo de exactitud, cobertura ni cumplimiento; las siete etapas siguen aportando pruebas y preguntas de evidencia.
+
+> 🔐 **Privacidad del análisis:** el archivo se procesa localmente en el navegador. Se ofrece una muestra y vistas de los registros involucrados, únicamente en el navegador. No se utiliza IA ni se envían los archivos a servicios externos.
 
 ### Controles automáticos actualmente considerados
 
@@ -378,7 +387,7 @@ No recibe protocolos, entrevistas, documentación de controles ni objetivos del 
 Como antecedente experimental del proyecto se describe una prueba de concepto con **Random Forest entrenado sobre datos sintéticos** construidos a partir de reglas de la matriz.
 
 > [!IMPORTANT]
-> El modelo experimental **no fue entrenado con auditorías reales**.  
+> El modelo experimental **no fue entrenado con auditorías reales**.<br>
 > Su desempeño no debe interpretarse como validación empírica ni como estándar para calificar riesgos. El modelo no forma parte del motor de esta app y sus archivos no se incluyen en este repositorio. Los cambios de criterios requerirían revisar las etiquetas sintéticas antes de reutilizarlo.
 
 ---
@@ -398,7 +407,7 @@ Las reglas exploratorias son decisiones de implementación, **no umbrales AGCBA/
 | Diseño del instrumento | Revisar formularios, objetivos, instructivos y diccionario; nulos o constantes no bastan. |
 | Actualización | Confirmar significado de la fecha, corte, período auditado y periodicidad exigible. No usar la fecha máxima como prueba de vigencia. |
 
-El CSV debe tener encabezados únicos y registros en una sola línea; el lector actual no soporta campos con saltos de línea. En Excel se analiza únicamente la hoja seleccionada. Verificar la carga y el alcance antes de interpretar los resultados.
+El lector CSV admite campos entrecomillados con saltos de línea y comillas escapadas; rechaza comillas sin cerrar y registros con distinta cantidad de campos para evitar análisis sobre una carga truncada. En Excel se analiza únicamente la hoja seleccionada. Verificar la carga y el alcance antes de interpretar los resultados.
 
 ## Fundamento metodológico y trazabilidad
 
@@ -450,6 +459,7 @@ Esta distinción permite modificar los criterios operativos **sin confundirlos c
 |---|---|
 | **index.html** | Interfaz principal de la herramienta |
 | **app.js** | Lógica de carga, análisis y evaluación |
+| **explorer.js** | Resumen general, preguntas frecuentes y descarga de respuestas |
 | **styles.css** | Diseño visual |
 | **xlsx.full.min.js** | Lectura local de archivos Excel |
 | **README.md** | Documentación metodológica y técnica |
@@ -505,16 +515,20 @@ IMPACTO EN LA APP:
 OBSERVACIONES:
 ~~~
 
+### Cambio aplicado — versión 3.0 · 25 de noviembre de 2026
+
+Se agrega evaluación general antes de las etapas y exploración local sin IA de vacíos, filas duplicadas, valores repetidos y nombres. Se documentan reglas, exclusiones y registros involucrados; no hay conclusiones automáticas ni modificación de la base.
+
 ### Cambio aplicado — versión 2.0 · 25 de noviembre de 2026
 
 Se sustituyen las calificaciones automáticas por estados descriptivos; se eliminan los cortes de gravedad y la calificación global por etapa; subregistro, diseño, actualización y uso de información en decisiones pasan a revisión con evidencia. Se actualizan interfaz y exportación y se reemplazan las referencias INTOSAI anteriores por ISSAI 100 verificada. Se preservan las siete etapas, carga local y descarga.
 
 ### Ejemplo
 
-> **Etapa:** Evaluación y retroalimentación  
-> **Criterio anterior:** base desactualizada > 365 días  
+> **Etapa:** Evaluación y retroalimentación<br>
+> **Criterio anterior:** base desactualizada > 365 días<br>
 > **Criterio nuevo:** revisión con evidencia sobre fecha de corte y periodicidad exigible<br>
-> **Motivo:** no todas las políticas actualizan información con la misma frecuencia  
+> **Motivo:** no todas las políticas actualizan información con la misma frecuencia<br>
 > **Tipo de cambio:** verificación contextual; sin umbral automático
 
 ---
@@ -523,7 +537,7 @@ Se sustituyen las calificaciones automáticas por estados descriptivos; se elimi
 
 ## ✦ Principio final
 
-*Sin trazabilidad, el dato pierde fuerza como evidencia.*  
+*Sin trazabilidad, el dato pierde fuerza como evidencia.*<br>
 *Sin evidencia confiable, la decisión pública se vuelve más difícil de evaluar.*
 
 **La matriz busca hacer visible ese recorrido y convertirlo en un objeto auditable.**

@@ -10,10 +10,40 @@ decision:{title:'6. Uso para la toma de decisiones',desc:'Examina la forma en qu
 evaluacion:{title:'7. Evaluación y retroalimentación',desc:'Analiza si los resultados obtenidos permiten corregir desvíos y mejorar la política pública en períodos posteriores.',risks:[{name:'Información desactualizada',check:'Confirmar significado de las fechas, fecha de corte, período auditado y periodicidad exigible. Una fecha antigua no prueba desactualización.',type:'documental',reco:'Confirmar fecha de corte, periodicidad prevista y mecanismos de actualización.'},{name:'Ausencia de retroalimentación',check:'No puede determinarse únicamente desde el archivo.',type:'documental',reco:'Solicitar evidencia de que los resultados fueron utilizados para corregir o rediseñar la política.'},{name:'Fallas detectadas que no se corrigen',check:'Requiere comparar auditorías o bases de distintos períodos.',type:'documental',reco:'Comparar hallazgos históricos y verificar implementación de medidas correctivas.'}]}
 };
 function splitLine(line,d){let out=[],cur='',q=false;for(let i=0;i<line.length;i++){let c=line[i];if(c==='"'){if(q&&line[i+1]==='"'){cur+='"';i++}else q=!q}else if(c===d&&!q){out.push(cur);cur=''}else cur+=c}out.push(cur);return out}
-function parseCSV(text){text=text.replace(/^\uFEFF/,'');let lines=text.split(/\r?\n/).filter(x=>x.trim()!=='');if(!lines.length)throw Error('Archivo vacío');let d=',',mx=0;[',',';','\t','|'].forEach(x=>{let n=splitLine(lines[0],x).length;if(n>mx){mx=n;d=x}});headers=splitLine(lines[0],d).map(x=>x.trim());rows=lines.slice(1).map(line=>{let vals=splitLine(line,d),r={};headers.forEach((h,i)=>r[h]=(vals[i]??'').trim());return r})}
+let headerNotes=[];
+function prepareHeaders(values,width){
+ const used=new Set();headerNotes=[];
+ return Array.from({length:width},(_,i)=>{
+  const original=String(values[i]??'').trim(),base=original||'Columna '+(i+1);
+  let name=base,n=2;while(used.has(name))name=base+' ('+(n++)+')';used.add(name);
+  if(!original||name!==original)headerNotes.push(`Columna ${i+1}: encabezado ${original?'repetido':'vacío'}; se muestra como “${name}”.`);
+  return name;
+ });
+}
+function parseCSV(text){
+ text=text.replace(/^\uFEFF/,'');
+ const first=text.split(/\r?\n/)[0];
+ let delimiter=',',max=0;[',',';','\t','|'].forEach(d=>{const n=splitLine(first,d).length;if(n>max){max=n;delimiter=d}});
+ const data=[];let line=[],cell='',quoted=false;
+ for(let i=0;i<text.length;i++){
+  const c=text[i];
+  if(c==='"'){if(quoted&&text[i+1]==='"'){cell+='"';i++}else quoted=!quoted}
+  else if(c===delimiter&&!quoted){line.push(cell);cell=''}
+  else if((c==='\n'||c==='\r')&&!quoted){line.push(cell);if(line.some(v=>!empty(v)))data.push(line);line=[];cell='';if(c==='\r'&&text[i+1]==='\n')i++}
+  else cell+=c;
+ }
+ if(quoted)throw Error('Hay comillas sin cerrar en el CSV. Revisá el archivo antes de analizarlo.');
+ line.push(cell);if(line.some(v=>!empty(v)))data.push(line);
+ if(!data.length)throw Error('Archivo vacío');
+ const width=data[0].length;
+ if(data.some(r=>r.length!==width))throw Error('Hay registros con distinta cantidad de campos. Revisá separadores y encabezados antes de analizar.');
+ headers=prepareHeaders(data[0],width);
+ rows=data.slice(1).map(values=>{const r=Object.create(null);headers.forEach((h,i)=>r[h]=values[i].trim());return r});
+}
 let workbook=null,loadVersion=0;
 function resetAnalysis(){
- rows=[];headers=[];currentStage='';currentResults=[];
+ rows=[];headers=[];currentStage='';currentResults=[];headerNotes=[];
+ resetExplorer();
  $('stageSelect').value='';
  $('results').classList.add('hidden');
  $('stageSection').classList.add('hidden');
@@ -24,16 +54,14 @@ function showLoaded(){
  $('fileInfo').textContent=fileName+(workbook?' · Hoja: '+$('sheetSelect').value:'')+' · '+rows.length+' registros · '+headers.length+' columnas · Base cargada correctamente';
  $('fileInfo').classList.remove('hidden');
  $('stageSection').classList.remove('hidden');
+ renderOverview();
 }
 function loadSheet(name){
  resetAnalysis();
  const data=XLSX.utils.sheet_to_json(workbook.Sheets[name],{header:1,defval:'',raw:true,blankrows:false});
  if(data.length<2)throw Error('La hoja está vacía o no contiene registros. Elegí otra hoja.');
- const width=data.reduce((max,row)=>Math.max(max,row.length),0),used=new Set();
- headers=Array.from({length:width},(_,i)=>{
-  const base=String(data[0][i]??'').trim()||'Columna '+(i+1);
-  let name=base,suffix=2;while(used.has(name))name=base+' ('+(suffix++)+')';used.add(name);return name;
- });
+ const width=data.reduce((max,row)=>Math.max(max,row.length),0);
+ headers=prepareHeaders(data[0],width);
  rows=data.slice(1).filter(row=>row.some(v=>!empty(v))).map(values=>{
   const row=Object.create(null);
   headers.forEach((h,i)=>{const v=values[i];row[h]=v instanceof Date?String(v.getFullYear())+'-'+String(v.getMonth()+1).padStart(2,'0')+'-'+String(v.getDate()).padStart(2,'0'):String(v??'').trim()});
