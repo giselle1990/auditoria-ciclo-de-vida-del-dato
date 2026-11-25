@@ -11,6 +11,7 @@ function element(id) {
 const context = vm.createContext({document:{getElementById:element,createElement:()=>({click(){}})},window:{scrollTo(){}},alert(message){throw Error(message)},Blob,URL:{createObjectURL(blob){exported=blob;return 'blob:test'},revokeObjectURL(){}}});
 vm.runInContext(fs.readFileSync('app.js','utf8'),context);
 vm.runInContext(fs.readFileSync('explorer.js','utf8'),context);
+vm.runInContext(fs.readFileSync('checklist.js','utf8'),context);
 const run=code=>vm.runInContext(code,context);
 test('document-dependent checks remain pending on complete and incomplete data',()=>{
  for(const csv of ['id,fecha\n1,2026-11-25','id,fecha\n,1900-01-01']) {
@@ -125,4 +126,32 @@ test('group pagination reaches all repeated values without truncating records or
  assert.match(element('faqTable').innerHTML,/Ley 20/);
  assert.equal(run('faqResult.data.length'),42);
  element('faqPrevious').click();assert.match(element('faqLimit').textContent,/1 a 20 de 21/);
+});
+
+test('field summary preserves original identifiers, singletons, blanks and original responses',()=>{
+ run("parseCSV('N,Expediente,DNI\\n7,EX-A,No consta\\n37,EX-B,Cumple\\na,EX-C,No consta\\n80,EX-D,')");
+ run('renderOverview()');
+ run("faqResult=answerQuestion('summary','2','','',false);renderAnswer()");
+ assert.equal(run("faqResult.groups.find(g=>g.label==='No consta').indices.map(recordLabel).join(', ')"),'7, a');
+ assert.equal(run('faqResult.groups.length'),3);
+ assert.equal(run('faqResult.data.length'),4);
+ assert.match(element('faqTable').innerHTML,/7, a/);
+ assert.match(run('faqCSV(faqResult)'),/EX-A/);
+ assert.equal(run("statusOf('No consta documento adicional')"),null);
+ assert.equal(run("statusOf('No cosnta')"),null);
+ assert.equal(run("statusOf('No cosnta',true)"),'No consta');
+});
+test('record counts reconcile, do not confuse absence with failure and keep typos optional',()=>{
+ run("parseCSV('N,Expediente,DNI,Control,Numero disposicion\\n7,EX-A,No consta,Cumple,DI-1\\n37,EX-B,No cumple,No cosnta,DI-1\\na,EX-C,No aplica,No,No consta')");
+ run('renderOverview()');
+ assert.equal(run("checklistSelected.includes('Numero disposicion')"),false);
+ assert.equal(run('checklistSelected.length'),2);
+ assert.equal(run("statusCounts(rows[1],checklistSelected)['Otras respuestas']"),1);
+ assert.equal(run("statusCounts(rows[1],checklistSelected)['No cumple']"),1);
+ element('groupStatusTypos').checked=true;
+ assert.equal(run("statusCounts(rows[1],checklistSelected)['No consta']"),1);
+ assert.equal(run('Object.values(statusCounts(rows[1],checklistSelected)).reduce((a,b)=>a+b,0)'),2);
+ const result=run("answerQuestion('values','4','','',false)");
+ assert.equal(result.groups.length,1);assert.equal(result.groups[0].label,'DI-1');assert.equal(result.data.length,2);
+ assert.equal(run('recordSummaryData().data.length'),3);
 });

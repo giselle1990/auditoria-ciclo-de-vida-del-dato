@@ -15,7 +15,7 @@ function htmlTable(columns,data){
  return '<table><thead><tr>'+columns.map(c=>'<th>'+escapeHTML(c)+'</th>').join('')+'</tr></thead><tbody>'+data.map(r=>'<tr>'+r.map(v=>'<td>'+escapeHTML(v)+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
 }
 function resetExplorer(){
- faqResult=null;
+ faqResult=null;resetChecklist();
  ['overviewSection','explorerSection','faqAnswer'].forEach(id=>$(id).classList.add('hidden'));
  ['overviewStats','columnSummary','dataPreview','faqTable'].forEach(id=>$(id).innerHTML='');
 }
@@ -30,7 +30,9 @@ function renderOverview(){
  $('faqContext').innerHTML=options('Sin campo de referencia');
  const inferred=headers.findIndex(h=>/expediente|^expte|^exp$/.test(norm(h)));$('faqContext').value=inferred<0?'':String(inferred);
  $('faqColumn').value='';$('faqName').value='';$('faqSurname').value='';$('normalizeNames').checked=false;
- $('faqQuestion').value='missing';configureQuestion();
+ initializeChecklist();
+ $('faqQuestion').value='summary';
+ const preferred=headers.findIndex(h=>norm(h)==='dni');$('faqColumn').value=String(preferred>=0?preferred:0);configureQuestion();
  $('overviewSection').classList.remove('hidden');$('explorerSection').classList.remove('hidden');
 }
 function configureQuestion(){
@@ -44,6 +46,7 @@ function invalidateAnswer(){faqResult=null;faqPage=0;$('faqAnswer').classList.ad
 function columnFrom(value){if(value===''||!/^\d+$/.test(value)||Number(value)>=headers.length)return null;return headers[Number(value)]}
 function answerQuestion(type,columnValue,nameValue,surnameValue,normalize){
  const column=columnFrom(columnValue),name=columnFrom(nameValue),surname=columnFrom(surnameValue);
+ if(type==='summary'){if(!column)throw Error('Elegí un campo para resumir sus respuestas.');return summarizeField(column)}
  if(type==='missing'){
   const fields=column?[column]:headers,data=[];
   rows.forEach((r,i)=>fields.forEach(h=>{if(empty(r[h]))data.push([i+1,h,...headers.map(k=>r[k])])}));
@@ -55,8 +58,8 @@ function answerQuestion(type,columnValue,nameValue,surnameValue,normalize){
   explanation='Se comparan todas las columnas después de recortar espacios exteriores. Se muestran todos los integrantes de cada grupo, incluida la primera fila. Confirmar la unidad de registro antes de considerar una repetición indebida.';
  }else if(type==='values'){
   if(!column)throw Error('Elegí el campo cuyos valores querés comparar.');
-  groupFields=[column];groups=groupedRecords(r=>empty(r[column])?null:String(r[column]));title=`Valores repetidos: ${column}`;
-  explanation='Coincidencia exacta del valor cargado, sin vacíos. Una categoría puede repetirse legítimamente; solo hay desvío de unicidad si existe un criterio que la exija.';
+  groupFields=[column];groups=groupedRecords(r=>empty(r[column])||statusOf(r[column],true)!==null?null:String(r[column]));title=`Valores repetidos: ${column}`;
+  explanation=`${rows.filter(r=>empty(r[column])||statusOf(r[column],true)!==null).length} registros con respuestas de checklist o vacíos excluidos de la búsqueda de identificadores repetidos. Consultá el resumen del campo para verlos. `+'Coincidencia exacta del valor cargado, sin vacíos. Una categoría puede repetirse legítimamente; solo hay desvío de unicidad si existe un criterio que la exija.';
  }else if(type==='names'){
   if(!name)throw Error('Elegí la columna de nombre o nombre completo.');
   if(name===surname)throw Error('Elegí columnas diferentes para nombre y apellido.');
@@ -89,6 +92,7 @@ function groupContext(group,field){
 function renderAnswer(){
  if(!faqResult)return;
  const result=faqResult;
+ if(result.fieldSummary){renderFieldSummary(result);return;}
  if(!result.groups){
   $('faqLimit').textContent=`${result.title}. Se muestran ${Math.min(50,result.data.length)} de ${result.data.length} resultados. La descarga incluye la respuesta completa. Registro = posición en la base cargada, desde 1.`;
   $('faqTable').innerHTML=htmlTable(result.columns,result.data.slice(0,50));$('faqPagination').classList.add('hidden');return;
@@ -98,7 +102,7 @@ function renderAnswer(){
  $('faqTable').innerHTML=shown.map(group=>{
   const context=groupContext(group,result.context);
   const references=context?`<p><strong>${escapeHTML(result.context)}:</strong> ${context.values.length?context.values.map(([v,n])=>`${escapeHTML(v)} (${n} ${n===1?'registro':'registros'})`).join('; '):'Sin valores informados'}${context.missing?` · ${context.missing} registros sin referencia`:''}.</p><p class="muted">${context.values.length} valores de referencia distintos. ${context.values.some(([,n])=>n>1)?'También hay repeticiones dentro de una misma referencia.':''} Esta relación no demuestra por sí sola un error.</p>`:'<p class="muted">Sin campo de referencia seleccionado. Los registros completos se muestran al desplegar.</p>';
-  return `<article class="repeat-group"><h4>${escapeHTML(group.label)}</h4><p><strong>${group.indices.length} registros</strong> con este valor o combinación.</p>${references}<details><summary>Ver los ${group.indices.length} registros completos</summary><div class="table-wrap">${htmlTable(['Registro',...headers],group.indices.map(i=>[i+1,...headers.map(h=>rows[i][h])]))}</div></details></article>`;
+  return `<article class="repeat-group"><h4>${escapeHTML(group.label)}</h4><p><strong>${group.indices.length} registros</strong> con este valor o combinación.</p><p><strong>${escapeHTML(recordIdField()||'Posiciones')}:</strong> ${escapeHTML(group.indices.map(recordLabel).join(', '))}</p>${references}<details><summary>Ver los ${group.indices.length} registros completos</summary><div class="table-wrap">${htmlTable(['Registro',...headers],group.indices.map(i=>[i+1,...headers.map(h=>rows[i][h])]))}</div></details></article>`;
  }).join('');
  $('faqPagination').classList.toggle('hidden',total<=20);$('faqPrevious').disabled=faqPage===0;$('faqNext').disabled=start+20>=total;
 }

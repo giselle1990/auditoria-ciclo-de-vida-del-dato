@@ -43,10 +43,22 @@ El proyecto combina dos productos:
 La aplicación fue diseñada como una herramienta de apoyo para una primera lectura de la base entregada por el organismo auditado.
 
 1. **Carga local del archivo** CSV, XLSX o XLS y selección de hoja.
-2. **Evaluación general**: cantidad de registros y columnas, vacíos por campo, valores distintos y grupos de filas idénticas. Vista previa de 10 registros.
+2. **Evaluación general y resumen de respuestas**: estados por campo, registros originales y conteos por registro; además, cantidad de registros y columnas, vacíos por campo, valores distintos y grupos de filas idénticas. Vista previa de 10 registros.
 3. **Preguntas frecuentes**: campos vacíos, filas duplicadas, valores repetidos en una columna y nombres repetidos. Respuestas calculadas sobre toda la hoja, sin IA.
 4. **Selección de etapa** para profundizar en pruebas y evidencia adicional.
 5. **Descarga** de consultas o análisis por etapa, sin calificar riesgos.
+
+### Resumen del contenido y de cada registro
+
+El resumen de un campo incluye todas las respuestas (también las que aparecen una vez), cantidades, porcentajes sobre la hoja cargada y números originales de registro. Se sugiere una columna N/ID y se puede elegir otra. Los identificadores no se renumeran ni corrigen. Si faltan, se muestra la posición como respaldo.
+
+El resumen por registro cuenta Cumple, No consta, No cumple, No aplica, Falta, Observa, Sí, No, Vacío y Otras respuestas **por separado**, sobre los campos de checklist seleccionados. Se sugieren solo columnas cuyos valores no vacíos son estados reconocidos; el usuario puede cambiar esa selección. No es un puntaje ni una verificación documental. Una columna DNI con “Cumple” indica una respuesta registrada, no un número de DNI validado.
+
+“No consta en EE” se agrupa con “No consta”. Las erratas conocidas “No cosnta”, “No consata” y “No cosnta en EE” se mantienen en Otras respuestas por defecto y solo se agrupan si el usuario activa la opción visible. Los valores originales permanecen en cada detalle. Los textos libres no se interpretan como estados por contener una palabra clave.
+
+En la consulta de identificadores repetidos se excluyen vacíos y estados de checklist reconocidos; se informa cuántos se excluyeron y se ofrece la consulta de resumen para verlos. Así, “No consta” repetido no se presenta como una disposición duplicada. Las leyes o códigos se comparan por valor completo sin quitar sus observaciones.
+
+Los registros se muestran de a 20, con navegación y descarga de todos los conteos y respuestas. En Excel se sugiere la hoja con más encabezados no vacíos para evitar iniciar sobre una portada o instructivo; siempre se muestra el nombre y se puede elegir otra hoja. El archivo de ejemplo del usuario no se incluye en el repositorio.
 
 ### Preguntas frecuentes y criterios reproducibles
 
@@ -460,6 +472,7 @@ Esta distinción permite modificar los criterios operativos **sin confundirlos c
 | **index.html** | Interfaz principal de la herramienta |
 | **app.js** | Lógica de carga, análisis y evaluación |
 | **explorer.js** | Resumen general, preguntas frecuentes y descarga de respuestas |
+| **checklist.js** | Estados por campo, identificadores originales y conteos por registro |
 | **styles.css** | Diseño visual |
 | **xlsx.full.min.js** | Lectura local de archivos Excel |
 | **README.md** | Documentación metodológica y técnica |

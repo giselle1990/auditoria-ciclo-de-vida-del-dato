@@ -86,7 +86,12 @@ $('file').addEventListener('change',async e=>{
    if(!workbook.SheetNames.length)throw Error('El archivo no contiene hojas.');
    workbook.SheetNames.forEach(name=>{const option=document.createElement('option');option.value=name;option.textContent=name;$('sheetSelect').appendChild(option)});
    $('sheetSection').classList.remove('hidden');
-   loadSheet(workbook.SheetNames[0]);
+   // Prefer a table over a cover/instruction sheet; keep the selected sheet visible.
+   const suggested=workbook.SheetNames.reduce((best,name)=>{
+    const first=XLSX.utils.sheet_to_json(workbook.Sheets[name],{header:1,defval:'',blankrows:false})[0]||[];
+    const score=first.filter(v=>!empty(v)).length;return score>best.score?{name,score}:best;
+   },{name:workbook.SheetNames[0],score:-1}).name;
+   $('sheetSelect').value=suggested;loadSheet(suggested);
   }else throw Error('Seleccioná un archivo CSV, XLSX o XLS.');
  }catch(err){if(version!==loadVersion)return;resetAnalysis();alert('No se pudo cargar la base. '+err.message)}
 });
