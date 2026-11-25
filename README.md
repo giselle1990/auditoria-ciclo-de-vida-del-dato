@@ -12,7 +12,7 @@
 ![Uso](https://img.shields.io/badge/Uso-Auditor%C3%ADa%20de%20campo-6741d9?style=for-the-badge)
 
 **Autora:** Dra. Giselle San German  
-**Versión metodológica:** 1.0 · **Documentación:** noviembre de 2026
+**Versión metodológica:** 2.0 · **Documentación:** noviembre de 2026
 
 </div>
 
@@ -46,7 +46,7 @@ La aplicación fue diseñada como una herramienta de apoyo para una primera lect
 2. **Selección de una etapa** del ciclo de vida del dato.
 3. **Análisis automático** de aspectos observables en la base.
 4. **Identificación de riesgos** que requieren revisión documental o de campo.
-5. **Clasificación preliminar** del riesgo.
+5. **Descripción del resultado** sin graduar riesgos ni calcular un puntaje de etapa.
 6. **Sugerencia de una acción de auditoría**.
 7. **Descarga del análisis** generado.
 
@@ -57,12 +57,13 @@ La aplicación fue diseñada como una herramienta de apoyo para una primera lect
 - duplicados completos;
 - valores faltantes;
 - formatos de fecha;
-- posibles problemas de actualización;
 - categorías inconsistentes;
 - valores atípicos;
-- estructura e incompletitud de variables.
+- incompletitud de variables (sin inferir su causa).
 
-Los riesgos que **no pueden inferirse únicamente desde la base** se muestran como **“Verificar”** y requieren revisión documental o trabajo de campo.
+Los aspectos que **no pueden inferirse únicamente desde la base** se muestran como **“Requiere evidencia”**. Subregistro, diseño del instrumento, actualización y uso de información en decisiones requieren contraste documental, externo o de campo.
+
+**Observable en el archivo** significa que puede ejecutarse una prueba analítica; no significa riesgo comprobado. **Alerta analítica** indica una señal que debe interpretarse. **Sin señal detectada** solo describe el alcance de la prueba, no acredita ausencia de problemas. **Requiere evidencia** también se utiliza cuando una prueba no cuenta con datos aptos.
 
 ---
 
@@ -152,7 +153,7 @@ La matriz combina información **predefinida** —que funciona como guía— con
 ### Concepto
 Comprende los procedimientos mediante los cuales el Estado recoge información de la realidad: formularios, relevamientos, registros administrativos, padrones, encuestas, sistemas de trámites o bases abiertas.
 
-### Riesgos actualmente utilizados
+### Riesgos potenciales que orientan la revisión
 - subregistro;
 - sesgo territorial o de cobertura;
 - diseño deficiente del instrumento de recolección;
@@ -172,7 +173,7 @@ Formularios, protocolos, diseño muestral o censal, informes de cobertura, padro
 ### Técnicas sugeridas
 Revisión documental, muestreo, georreferenciación, análisis de cobertura, entrevistas y contraste con fuentes externas.
 
-> **Criterios editables:** definición de subregistro, umbrales de incompletitud y cobertura suficiente.
+> **Criterios a definir y justificar en el encargo (no configurables en la interfaz actual):** universo esperado, período, fuentes de contraste y cobertura exigible. Los faltantes de campos no miden subregistro.
 
 </details>
 
@@ -182,7 +183,7 @@ Revisión documental, muestreo, georreferenciación, análisis de cobertura, ent
 ### Concepto
 Comprende el ingreso del dato en planillas, sistemas informáticos, bases o expedientes.
 
-### Riesgos actualmente utilizados
+### Riesgos potenciales que orientan la revisión
 - errores manuales;
 - omisión de campos;
 - registros duplicados;
@@ -203,7 +204,7 @@ Manuales de carga, reglas del sistema, base original, logs, instructivos, perfil
 ### Técnicas sugeridas
 Pruebas de consistencia, detección de duplicados, análisis de nulos, revisión de formatos y cruces de campos.
 
-> **Criterios editables:** umbrales de duplicados, porcentaje de faltantes tolerable, campos críticos y reglas de formato.
+> **Criterios a definir y justificar en el encargo (no configurables en la interfaz actual):** umbrales de duplicados, porcentaje de faltantes tolerable, campos críticos y reglas de formato.
 
 </details>
 
@@ -213,7 +214,7 @@ Pruebas de consistencia, detección de duplicados, análisis de nulos, revisión
 ### Concepto
 Comprende los controles de consistencia, detección de duplicados, cruces con otras bases y revisión de documentación respaldatoria.
 
-### Riesgos actualmente utilizados
+### Riesgos potenciales que orientan la revisión
 - ausencia de controles sistemáticos;
 - duplicados no detectados;
 - criterios de validación no documentados;
@@ -233,7 +234,7 @@ Protocolos de validación, reportes de excepciones, registros de duplicados, bas
 ### Técnicas sugeridas
 Cruce de bases, análisis de frecuencias, controles de unicidad, detección de outliers y pruebas de rango y lógica.
 
-> **Criterios editables:** identificadores únicos, nivel de outliers que genera alerta y fuentes externas consideradas válidas.
+> **Criterios a definir y justificar en el encargo (no configurables en la interfaz actual):** identificadores únicos, pertinencia de la prueba de valores atípicos y fuentes externas consideradas válidas.
 
 </details>
 
@@ -243,7 +244,7 @@ Cruce de bases, análisis de frecuencias, controles de unicidad, detección de o
 ### Concepto
 Incluye limpieza, clasificación, segmentación, transformación, agregación y construcción de variables.
 
-### Riesgos actualmente utilizados
+### Riesgos potenciales que orientan la revisión
 - criterios opacos;
 - pérdida de información;
 - categorías arbitrarias;
@@ -264,7 +265,7 @@ Scripts, diccionarios de datos, bitácoras, versiones de bases, manuales de proc
 ### Técnicas sugeridas
 Comparación entre versiones, revisión de código, reproducción de transformaciones, análisis de categorías y control de trazabilidad.
 
-> **Criterios editables:** transformaciones críticas, documentación suficiente, inconsistencias categóricas y requisitos de reversibilidad.
+> **Criterios a definir y justificar en el encargo (no configurables en la interfaz actual):** transformaciones críticas, documentación suficiente, inconsistencias categóricas y requisitos de reversibilidad.
 
 </details>
 
@@ -274,7 +275,7 @@ Comparación entre versiones, revisión de código, reproducción de transformac
 ### Concepto
 Comprende la transformación de información en métricas utilizadas para evaluar una política pública.
 
-### Riesgos actualmente utilizados
+### Riesgos potenciales que orientan la revisión
 - indicadores proxy;
 - metas sin línea de base;
 - falta de ficha técnica;
@@ -296,7 +297,7 @@ Fichas técnicas, fórmulas, series históricas, metas, líneas de base, informe
 ### Técnicas sugeridas
 Recalculación, comparación temporal y territorial, validación metodológica y contraste entre objetivo e indicador.
 
-> **Criterios editables:** contenido mínimo de la ficha técnica, diferencia aceptable entre resultado informado y recalculado y definición de indicador proxy.
+> **Criterios a definir y justificar en el encargo (no configurables en la interfaz actual):** contenido mínimo de la ficha técnica, diferencia aceptable entre resultado informado y recalculado y definición de indicador proxy.
 
 </details>
 
@@ -306,7 +307,7 @@ Recalculación, comparación temporal y territorial, validación metodológica y
 ### Concepto
 Es el momento en que la información se utiliza para asignar recursos, priorizar beneficiarios, rediseñar programas, planificar o comunicar resultados.
 
-### Riesgos actualmente utilizados
+### Riesgos potenciales que orientan la revisión
 - uso selectivo de evidencia;
 - información incompleta;
 - presentación exclusiva de resultados favorables;
@@ -326,7 +327,7 @@ Informes de gestión, actas, expedientes, notas presupuestarias, informes técni
 ### Técnicas sugeridas
 Trazabilidad decisión-evidencia, comparación entre informes y bases, revisión documental, entrevistas y contraste presupuestario.
 
-> **Criterios editables:** evidencia suficiente, documentación mínima para justificar una decisión y correspondencia entre resultados y asignación de recursos.
+> **Criterios a definir y justificar en el encargo (no configurables en la interfaz actual):** evidencia suficiente, documentación mínima para justificar una decisión y correspondencia entre resultados y asignación de recursos.
 
 </details>
 
@@ -336,7 +337,7 @@ Trazabilidad decisión-evidencia, comparación entre informes y bases, revisión
 ### Concepto
 Incluye el análisis de resultados, la corrección de desvíos y la utilización de lo aprendido para modificar períodos o diseños posteriores.
 
-### Riesgos actualmente utilizados
+### Riesgos potenciales que orientan la revisión
 - falta de retroalimentación;
 - desactualización;
 - errores recurrentes no corregidos;
@@ -356,7 +357,7 @@ Informes de evaluación, planes de mejora, seguimientos, versiones históricas, 
 ### Técnicas sugeridas
 Comparación interanual, seguimiento de recomendaciones, análisis de recurrencia, revisión documental y cruce con planificación posterior.
 
-> **Criterios editables:** antigüedad admisible de la información, implementación suficiente de recomendaciones y evidencia de retroalimentación efectiva.
+> **Criterios a definir y justificar en el encargo (no configurables en la interfaz actual):** antigüedad admisible de la información, implementación suficiente de recomendaciones y evidencia de retroalimentación efectiva.
 
 </details>
 
@@ -368,48 +369,45 @@ El proyecto distingue entre dos niveles de automatización.
 
 ## 1. Motor transparente de reglas
 
-Utiliza variables definidas para producir una evaluación preliminar:
+El motor implementado en `app.js` ejecuta pruebas descriptivas de filas idénticas, celdas vacías, interpretación de fechas, posibles variantes de categorías y valores atípicos. La tabla conserva las siete etapas y las acciones sugeridas. Los demás aspectos requieren evidencia adicional.
 
-- etapa;
-- existencia de protocolo;
-- controles automáticos;
-- documentación;
-- volumen de datos;
-- cantidad de sistemas involucrados;
-- actualización periódica;
-- validación cruzada;
-- capacitación de operadores;
-- ficha técnica de indicadores;
-- circuito de retroalimentación;
-- tipo de política.
+No recibe protocolos, entrevistas, documentación de controles ni objetivos del programa; por eso no evalúa automáticamente su cumplimiento. No asigna Bajo / Medio / Alto, ponderaciones ni una calificación global por etapa. La descarga CSV conserva los estados descriptivos y la advertencia de alcance.
 
 ## 2. Machine Learning experimental
 
-Se desarrolló además una prueba de concepto con **Random Forest entrenado sobre datos sintéticos** construidos a partir de reglas de la matriz.
+Como antecedente experimental del proyecto se describe una prueba de concepto con **Random Forest entrenado sobre datos sintéticos** construidos a partir de reglas de la matriz.
 
 > [!IMPORTANT]
 > El modelo experimental **no fue entrenado con auditorías reales**.  
-> Su desempeño no debe interpretarse como validación empírica ni como estándar para calificar riesgos.
+> Su desempeño no debe interpretarse como validación empírica ni como estándar para calificar riesgos. El modelo no forma parte del motor de esta app y sus archivos no se incluyen en este repositorio. Los cambios de criterios requerirían revisar las etiquetas sintéticas antes de reutilizarlo.
 
 ---
 
-# ⚙️ Parámetros configurables
+# ⚙️ Criterios y límites de las pruebas
 
-Los umbrales y ponderaciones son **criterios de diseño**, no estándares universales.
+Las reglas exploratorias son decisiones de implementación, **no umbrales AGCBA/INTOSAI**. Se eliminaron los cortes que graduaban faltantes, duplicados, fechas, categorías y outliers, y los plazos universales de 180/365 días. No hay un panel de configuración de criterios en esta versión.
 
-Ejemplos:
-
-| Parámetro | Uso |
+| Prueba | Alcance y límite |
 |---|---|
-| % de valores faltantes | Activar alertas de incompletitud |
-| % de duplicados | Graduar riesgo de registro |
-| antigüedad de fechas | Analizar posible desactualización |
-| criterio de outlier | Detectar valores atípicos |
-| campos críticos | Adaptar controles al objeto auditado |
-| reglas de categorías | Normalizar codificaciones |
-| Bajo / Medio / Alto | Clasificación orientativa |
+| Filas idénticas | Cuenta todas las filas que pertenecen a grupos repetidos, sobre el total de filas. No prueba duplicación indebida ni unicidad de una clave. |
+| Faltantes | Informa el porcentaje máximo por columna, sobre el total de filas. No distingue campos obligatorios, opcionales o no aplicables. |
+| Fechas | Infiere columnas por nombre y cuenta valores no vacíos que el lector no interpreta. Puede aceptar fechas ambiguas o normalizadas; no valida el calendario del programa ni actualización. |
+| Categorías | Agrupa posibles variantes tras normalizar escritura, solo en columnas de 2 a 100 valores distintos. No confirma equivalencia semántica. |
+| Outliers | Regla exploratoria de 1,5 × IQR; mínimo 20 valores numéricos no vacíos, 5 distintos e IQR positivo. Excluye vacíos; no reconoce por sí sola identificadores ni unidades. Si no hay columnas aptas, informa “Requiere evidencia”. |
+| Subregistro | Contrastar universo esperado, padrones, cobertura y período. No inferirlo de celdas vacías. |
+| Diseño del instrumento | Revisar formularios, objetivos, instructivos y diccionario; nulos o constantes no bastan. |
+| Actualización | Confirmar significado de la fecha, corte, período auditado y periodicidad exigible. No usar la fecha máxima como prueba de vigencia. |
 
-La recomendación metodológica es mantener estos criterios **versionados y modificables**, de modo que puedan adaptarse al tipo de política y al contexto de auditoría.
+El CSV debe tener encabezados únicos y registros en una sola línea; el lector actual no soporta campos con saltos de línea. En Excel se analiza únicamente la hoja seleccionada. Verificar la carga y el alcance antes de interpretar los resultados.
+
+## Fundamento metodológico y trazabilidad
+
+- **AGCBA — [Normas Básicas de Auditoría Externa](https://www.agcba.gob.ar/docs/norm_2024-10-07_normas-basicas-de-auditoria-externa.pdf)**, apartados 18 y 32 (criterios), 20–24 (documentación), 36–43 (evidencia y hallazgos): los criterios deben corresponder al objeto y las conclusiones deben sustentarse en evidencia evaluada y documentada.
+- **INTOSAI — [ISSAI 100](https://www.issai.org/wp-content/uploads/2019/08/ISSAI-100-Fundamental-Principles-of-Public-Sector-Auditing.pdf)**, párrafos 27 (criterios), 37 (juicio y escepticismo profesional), 43 (documentación), 49–50 (evidencia y evaluación): las pruebas deben interpretarse según el objetivo del encargo y la suficiencia y adecuación de la evidencia.
+
+Esta revisión toma esos principios como orientación metodológica; no declara certificación, aval institucional ni cumplimiento integral de las normas. Ninguna de estas referencias se utiliza como fundamento de porcentajes universales para calificar riesgos.
+
+Antes de formular una observación, registrar en los papeles de trabajo: objetivo y alcance; criterio aplicable y su fuente; archivo, versión, hoja y período; procedimiento y limitaciones; resultado; evidencia de contraste; explicación del organismo; valoración profesional y responsable. Cualquier tolerancia debe justificarse para el encargo, no deducirse de un valor predeterminado de la app.
 
 ---
 
@@ -419,7 +417,7 @@ La recomendación metodológica es mantener estos criterios **versionados y modi
 |---|---|
 | 📚 **Marco conceptual / fuentes** | Calidad de datos, trazabilidad, evidencia, políticas basadas en evidencia, auditoría de sistemas y rol del control externo |
 | 🧭 **Propuesta metodológica** | Organización en siete etapas, riesgos, preguntas, documentos y técnicas sugeridas |
-| ⚙️ **Criterio configurable** | Umbrales, scoring, pesos, alertas, campos críticos y clasificación de riesgo |
+| ⚙️ **Criterio configurable** | Reglas exploratorias de la app y criterios del encargo documentados por el auditor; sin scoring automático |
 | 🧪 **Prototipo experimental** | Random Forest, datos sintéticos, recomendaciones automáticas e interfaz digital |
 
 Esta distinción permite modificar los criterios operativos **sin confundirlos con conceptos teóricos o estándares externos**.
@@ -438,7 +436,7 @@ Esta distinción permite modificar los criterios operativos **sin confundirlos c
 ### La aplicación **sí**:
 
 - orienta;
-- prioriza;
+- ayuda a organizar la revisión, sin jerarquizar por gravedad;
 - detecta anomalías;
 - organiza riesgos;
 - sugiere preguntas y controles;
@@ -456,6 +454,7 @@ Esta distinción permite modificar los criterios operativos **sin confundirlos c
 | **xlsx.full.min.js** | Lectura local de archivos Excel |
 | **README.md** | Documentación metodológica y técnica |
 | **SheetJS-LICENSE.txt** | Licencia de la biblioteca utilizada |
+| **tests/criteria.test.cjs** | Pruebas de regresión de estados, evidencia y exportación; ejecutar con `node --test tests/criteria.test.cjs` |
 
 ---
 
@@ -464,14 +463,14 @@ Esta distinción permite modificar los criterios operativos **sin confundirlos c
 <details>
 <summary><strong>Ver bibliografía completa</strong></summary>
 
+- AGCBA. *Normas Básicas de Auditoría Externa*. Documento oficial enlazado en el fundamento metodológico.
+- INTOSAI. *ISSAI 100 — Fundamental Principles of Public-Sector Auditing*. Documento oficial enlazado en el fundamento metodológico.
+
 - Batini, C., & Scannapieco, M. (2016). *Data and information quality: Dimensions, principles and techniques* (2nd ed.). Springer. https://doi.org/10.1007/978-3-319-24106-7
 - Davies, P. (1999). What is evidence-based education? *British Journal of Educational Studies, 47*(2), 108–121. https://doi.org/10.1111/1467-8527.00106
 - Davenport, T. H., & Harris, J. G. (2007). *Competing on analytics: The new science of winning*. Harvard Business School Press.
 - Filgueiras, F. (2021). Inteligencia artificial y políticas públicas en América Latina y el Caribe. En SELA, *Inteligencia artificial y políticas públicas en ALC*.
 - Innerarity, D. (2024). Gobernanza democrática de la inteligencia artificial. En SELA, *Inteligencia artificial y políticas públicas en ALC*.
-- INTOSAI. (2010). *ISSAI 5300: Guidelines for internal control standards for the public sector*.
-- INTOSAI. (2013). *ISSAI 5510: Audit of information systems*.
-- INTOSAI. (2019). *ISSAI 5420: Guidelines on auditing data quality*.
 - Kitchin, R. (2014). *The data revolution: Big data, open data, data infrastructures and their consequences*. SAGE.
 - Nutley, S., Walter, I., & Davies, H. T. O. (2007). *Using evidence: How research can inform public services*. Policy Press.
 - OCDE. (2024). *Panorama de las administraciones públicas de América Latina y el Caribe 2024*. https://doi.org/10.1787/9789269264986-es
@@ -506,13 +505,17 @@ IMPACTO EN LA APP:
 OBSERVACIONES:
 ~~~
 
+### Cambio aplicado — versión 2.0 · 25 de noviembre de 2026
+
+Se sustituyen las calificaciones automáticas por estados descriptivos; se eliminan los cortes de gravedad y la calificación global por etapa; subregistro, diseño, actualización y uso de información en decisiones pasan a revisión con evidencia. Se actualizan interfaz y exportación y se reemplazan las referencias INTOSAI anteriores por ISSAI 100 verificada. Se preservan las siete etapas, carga local y descarga.
+
 ### Ejemplo
 
 > **Etapa:** Evaluación y retroalimentación  
 > **Criterio anterior:** base desactualizada > 365 días  
-> **Criterio nuevo:** umbral configurable según periodicidad del programa  
+> **Criterio nuevo:** revisión con evidencia sobre fecha de corte y periodicidad exigible<br>
 > **Motivo:** no todas las políticas actualizan información con la misma frecuencia  
-> **Tipo de cambio:** criterio propio / parametrización
+> **Tipo de cambio:** verificación contextual; sin umbral automático
 
 ---
 
