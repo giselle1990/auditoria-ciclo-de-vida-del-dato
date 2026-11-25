@@ -97,9 +97,32 @@ test('overview and question handlers render escaped data, export all results and
  assert.match(element('faqTable').innerHTML,/&lt;img/);
  run("headers=['valor'];rows=Array.from({length:60},()=>({valor:'=1+1'}))");
  element('askFaq').click();
- assert.match(element('faqLimit').textContent,/50 de 60/);
+ assert.match(element('faqLimit').textContent,/Grupos 1 a 1 de 1/);
  assert.equal(run('faqResult.data.length'),60);
  assert.match(run('faqCSV(faqResult)'),/For|Exportación/);
  assert.match(run('faqCSV(faqResult)'),/'=1\+1/);
  run('resetAnalysis()');assert.equal(run('faqResult'),null);
+});
+
+test('any repeated field groups actual values, links expedientes and preserves every record',()=>{
+ run("parseCSV('disposicion,ley aplicable,expediente\\nDI-1,Ley 10,EX-1\\nDI-1,Ley 10,EX-2\\nDI-2,Ley 10,EX-3\\nDI-2,Ley 20,EX-3\\nDI-2,Ley 20,')");
+ run("faqResult=answerQuestion('values','0','','',false);faqResult.context='expediente';faqPage=0;renderAnswer()");
+ assert.equal(run('faqResult.groups.length'),2);
+ assert.equal(run('faqResult.groups[0].label'),'DI-1');
+ assert.equal(run("JSON.stringify(groupContext(faqResult.groups[1],'expediente'))"),JSON.stringify({values:[['EX-3',2]],missing:1}));
+ assert.match(element('faqTable').innerHTML,/EX-1.*EX-2/s);
+ assert.match(element('faqTable').innerHTML,/Ver los 3 registros completos/);
+ assert.equal(run('faqResult.data.length'),5);
+ run("faqResult=answerQuestion('values','1','','',false);faqResult.context=null;renderAnswer()");
+ assert.equal(run('faqResult.groups[0].label'),'Ley 10');
+ assert.match(element('faqTable').innerHTML,/Sin campo de referencia/);
+ assert.match(run('faqCSV(faqResult)'),/Valor repetido/);
+});
+test('group pagination reaches all repeated values without truncating records or export',()=>{
+ run("headers=['ley'];rows=Array.from({length:42},(_,i)=>({ley:'Ley '+Math.floor(i/2)}));faqResult=answerQuestion('values','0','','',false);faqPage=0;renderAnswer()");
+ assert.match(element('faqLimit').textContent,/1 a 20 de 21/);
+ element('faqNext').click();assert.match(element('faqLimit').textContent,/21 a 21 de 21/);
+ assert.match(element('faqTable').innerHTML,/Ley 20/);
+ assert.equal(run('faqResult.data.length'),42);
+ element('faqPrevious').click();assert.match(element('faqLimit').textContent,/1 a 20 de 21/);
 });
